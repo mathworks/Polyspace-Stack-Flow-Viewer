@@ -16,6 +16,11 @@ Perl should be installed on the platform where the tool will be used.
 
 If the script is used under Windows, first edit the script stack_flow_viewer.bat to change the value of the variable PATH_PERL, to specify the path to your Perl installation at the second line by modifying the variable PATH_PERL so it contains the absolute path to the bin folder of your Perl installation.
 
+Under Linux, set the execution rights for stack_flow_viewer.sh:
+``` 
+ chmod u+x stack_flow_viewer.sh
+``` 
+
 # Calling the tool
 
 Under Windows, launch:
