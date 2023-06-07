@@ -30,9 +30,10 @@ Under Linux, launch:
  stack_flow_viewer.sh export_file html_report_file
 
 Example:
- 
- stack_flow_viewer.sh Result_List_cpp.txt cpp_example.html
 
+``` 
+ stack_flow_viewer.sh Result_List_cpp.txt cpp_example.html
+```
 
 # License
 
