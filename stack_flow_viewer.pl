@@ -1,6 +1,23 @@
 #!/usr/bin/perl
 
-# Copyright
+# Copyright (c) 2023 The MathWorks, Inc.
+# All Rights Reserved.
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 
 use strict;
 use warnings;
@@ -82,6 +99,7 @@ if (grep {$_ eq '-h'} @ARGV) {
 # to create the hashtable which associates
 # function and min/max stack usage 
 sub read_export {
+my $metrics_found=0;
 
 open (FH, $filename_export);   # open in read-only mode
 $line = <FH>;
@@ -90,6 +108,7 @@ while (<FH>) {
 	$line = $_;
 	if ($cpp_app) {
 		if ($line =~ /\tFunction Metrics.*Minimum Stack Usage\t([^\t]*)\t[^\t]*\t([^\t]*)\t/) {
+			$metrics_found = 1;
 			$function_name = $2;
 			if ($1 =~ /Not computed/) {
 				$functions_hash{$function_name}{"minsu"}="?";
@@ -107,6 +126,7 @@ while (<FH>) {
 		}
 	} else {
 		if ($line =~ /\tFunction Metrics.*Minimum Stack Usage\t([^\t]*)\t([^\t]*)\t/) {
+			$metrics_found = 1;
 			$function_name = $2;
 			if ($1 =~ /Not computed/) {
 				$functions_hash{$function_name}{"minsu"}="?";
@@ -128,15 +148,12 @@ while (<FH>) {
 
 close (FH);
 
-for my $function ( keys %functions_hash) {
-	#print $function." ".$functions_hash{$function}{"minsu"}."..".$functions_hash{$function}{"maxsu"}."\n";
-}
-
+return $metrics_found;
 }
 
 # Parse the report in HTML to extract information
 sub read_report {
-
+my $tokens_found=0;
 open (FH,$filename_html) or die("Cannot find $filename_html");
 
 while (<FH>) {
@@ -155,12 +172,13 @@ while (<FH>) {
 	}
 
 	if ($line =~ /<table class.*Call tree/) { # find the right table
+		$tokens_found = 1;
 		$line =~ s/<td><p\/><\/td>/<td><p><span> <\/span><\/p><\/td>/g;
 		@matches = $line =~ m/<td><p><span>(.*?)<\/span><\/p><\/td>/g;
 	}
 }
 close(FH);
-
+return $tokens_found;
 }
 
 #  Process the two sources of information
@@ -287,16 +305,24 @@ close(FH);
 ##   Main part   ##
 ###################
 
-&read_args();
+read_args();
 
 print "Reading the export file...";
-&read_export();
-print "Ok\n";
+if (!read_export()) {
+	print "Error\nNo code metrics for stack usage found in the export file. Cannot continue.\n";
+	exit 1;
+} else {
+	print "Ok\n";
+}
 print "Reading the report file...";
-&read_report();
-print "Ok\n";
+if (!read_report()) {
+	print "Error\nTable for Call Tree information not found in the HTML file. Cannot continue.\n";
+	exit 1;
+} else {
+	print "Ok\n";
+}
 print "Generating the output file...";
-&generate();
+generate();
 print "Ok\n";
 print "File $output_file generated\n";
 

@@ -1,4 +1,25 @@
+:: Copyright (c) 2023 The MathWorks, Inc.
+:: All Rights Reserved.
+::
+:: Permission is hereby granted, free of charge, to any person obtaining a copy
+:: of this software and associated documentation files (the "Software"), to deal
+:: in the Software without restriction, including without limitation the rights
+:: to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+::
+:: The above copyright notice and this permission notice shall be included in
+:: all copies or substantial portions of the Software.:x
+::
+:: THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+:: IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+:: FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+:: AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+:: LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM
+:: OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+:: THE SOFTWARE.
+
 @echo off
+set PATH_PERL=E:\Program Files\MATLAB\R2018a\sys\perl\win32\bin
+set SCRIPT_ARGS=%*
 
 :: Check if there are any arguments
 if "%~1" == "" (
@@ -12,12 +33,5 @@ if "%~1" == "" (
   exit /b 2
 )
 
-set PERL_ARGS=%*
-
 :: Call the Perl script with the arguments
-::"E:\Program Files\MATLAB\R2018a\sys\perl\win32\bin\perl.exe" extract.pl Result_List_cpp.txt cpp_example.html
-::"E:\Program Files\MATLAB\R2018a\sys\perl\win32\bin\perl.exe" extract.pl Result_List_Dassault.txt dassault_file.html
-"E:\Program Files\MATLAB\R2018a\sys\perl\win32\bin\perl.exe" extract.pl Result_List.txt code_prover_demo.html
-
-
-::"E:\Program Files\MATLAB\R2018a\sys\perl\win32\bin\perl.exe" extract.pl "%PERL_ARGS%"
+"%PATH_PERL%/perl.exe" stack_flow_viewer.pl "%SCRIPT_ARGS%"
