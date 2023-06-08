@@ -5,7 +5,7 @@ It can be then used to help developers identify potential stack overflow issues 
 
 # Usage
 
-The tool will merge an export file (in tsv format) of a Polyspace® Code Prover&trade; results and a report in HTML format created using the report template CallHierarchy.rpt to produce an HTML file showing the stack usage using thee call hierarchy of functions.
+The tool will merge an export file (in tsv format) of a Polyspace® Code Prover&trade; results and a report in HTML format created using the report template CallHierarchy.rpt to produce an HTML file showing the stack usage using the call hierarchy of functions.
 
 The stack usage metrics computed by Polyspace is shown by a range of the minimum and maximum stack usage.
 Please note that when the stack cannot be computed, a ? will be given instead.
