@@ -19,10 +19,15 @@
 
 @echo off
 set PATH_PERL=E:\Program Files\MATLAB\R2018a\sys\perl\win32\bin
-set SCRIPT_ARGS=%*
+
+set argCount=0
+for %%x in (%*) do (
+   set /A argCount+=1
+   set "argVec[!argCount!]=%%~x"
+)
 
 :: Check if there are any arguments
-if "%~1" == "" (
+if %argCount% == 0 (
   echo Usage:
   echo  %~n0 EXPORT_FILE REPORT_FILE
   echo  where EXPORT_FILE is an export of Polyspace results in tsv format
@@ -33,5 +38,7 @@ if "%~1" == "" (
   exit /b 2
 )
 
+set SCRIPT_ARGS=%*
+
 :: Call the Perl script with the arguments
-"%PATH_PERL%/perl.exe" stack_flow_viewer.pl "%SCRIPT_ARGS%"
+"%PATH_PERL%/perl.exe" stack_flow_viewer.pl %SCRIPT_ARGS%
